@@ -511,6 +511,14 @@ attributes:
 func (p *LDAPUserProvider) resolveUsersFilter(input string) (filter string) {
 	filter = p.config.UsersFilter
 
+	// Just want to ignore the provided DOMAIN in this mod
+	if p.config.Implementation == "activedirectory" && ldapIsDomainUsername(input) {
+		parts := strings.Split(input, "\\")
+		if len(parts) == 2 {
+			input = parts[1]
+		}
+	}
+
 	if p.usersFilterReplacementInput {
 		// The {input} placeholder is replaced by the username input.
 		filter = strings.ReplaceAll(filter, ldapPlaceholderInput, ldapEscape(input))

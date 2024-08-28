@@ -1,0 +1,20 @@
+(trusted_proxy_list) {
+       trusted_proxies 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 fc00::/7
+}
+
+dev.internal {
+	tls internal
+	respond "Hello, world!"
+}
+
+test.dev.internal {
+	tls internal
+	respond "Test"
+}
+
+auth.dev.internal {
+	tls internal
+	reverse_proxy authelia:9091 {
+        import trusted_proxy_list
+    }
+}

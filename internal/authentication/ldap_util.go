@@ -2,6 +2,7 @@ package authentication
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 
 	ber "github.com/go-asn1-ber/asn1-ber"
@@ -103,4 +104,15 @@ func ldapGetReferral(err error) (referral string, ok bool) {
 	default:
 		return "", false
 	}
+}
+
+func ldapIsDomainUsername(inputUsername string) bool {
+	// This regex pattern matches:
+	// - One or more characters that are not a backslash
+	// - Followed by a single backslash
+	// - Followed by one or more characters
+	pattern := `^[^\\]+\\[^\\]+$`
+
+	match, _ := regexp.MatchString(pattern, inputUsername)
+	return match
 }
